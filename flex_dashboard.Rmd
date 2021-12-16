@@ -1,0 +1,161 @@
+---
+title: "Incendies Promethee"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(leaflet)
+library(plotly)
+library(knitr)
+library(DT)
+```
+
+```{r load_data, include = FALSE}
+incendies_cases <- read.csv(file = "C:/Users/JNebot/Desktop/PROJECTES-PACA/INCENDIES-PACA/Dashboard/list_inc.csv",
+                           header =  TRUE,
+                           sep = ',')
+```
+
+Intro Page
+=======================================
+
+
+
+Column {data-width=650} {.tabset}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+### Chart A1
+```{r}
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
+Data Page
+=======================================
+
+### Data Table
+
+```{r}
+
+datatable(incendies_cases, rownames = FALSE, extensions = 'Buttons', options = list(    dom = 'Bfrtip',    buttons = c('copy', 'csv', 'excel', 'pdf', 'print')  ))
+
+```
+
+Second Page
+================================================
+Column {data-width=650} 
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Nombre total de feus
+
+```{r}
+
+n_total_feu <- count(incendies_cases)
+
+valueBox(n_total_feu,
+         caption = "Nombre total de feus",
+         icon = "fa-clock-o")
+```
+
+### Nombre Total feus <= 1m2
+```{r}
+
+n_total_feu_1 <- incendies_cases %>%
+                 select(Surface.parcourue..m2.) %>%
+                 filter(Surface.parcourue..m2. <= 1) %>%
+                 nrow()
+
+valueBox(n_total_feu_1,
+         caption = "Nombre total de feus <= 1m2",
+         icon = "fa-clock-o")
+```
+
+### Nombre Total feus > 1m2 et <=100m2
+```{r}
+
+n_total_feu_100 <- incendies_cases %>%
+                   select(Surface.parcourue..m2.) %>%
+                   filter(Surface.parcourue..m2. >1,
+                          Surface.parcourue..m2.<= 100) %>%
+                   nrow()
+
+valueBox(n_total_feu_100,
+         caption = "Nombre total de feus >1m2 et <= 100m2",
+         icon = "fa-clock-o")
+```
+
+### Nombre Total feus > 100m2
+```{r}
+
+n_total_feu_big <- incendies_cases %>%
+                   select(Surface.parcourue..m2.) %>%
+                   filter(Surface.parcourue..m2. > 100) %>%
+                   nrow()
+
+valueBox(n_total_feu_big,
+         caption = "Nombre total de feus >100m2",
+         icon = "fa-clock-o")
+```
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
+Carte
+================================================
+
+### Carte des Feu
+
+```{r}
+leaflet() %>%
+addTiles() # %>%
+#addMarkers(lng = stations_df$longitude, lat = stations_df$latitude) 
+
+```
